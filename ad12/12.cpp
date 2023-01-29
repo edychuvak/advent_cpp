@@ -22,7 +22,7 @@ void printPlayMatrix(std::vector<std::vector<char>> &v)
         std::cout << std::endl;
     }
 }
-point findS(std::vector<std::vector<char>> &v)
+point findS(std::vector<std::vector<char>> &v,point &endpoint)
 {
     point p;
     for (int i = 0; i != v.size(); i++)
@@ -37,7 +37,10 @@ point findS(std::vector<std::vector<char>> &v)
             }
             if (v[i][j] == 'E')
             {
-                v[i][j] = '{';
+                v[i][j] = 'z';
+                endpoint.i=i;
+                endpoint.j=j;
+                endpoint.letter='E';
             }
         }
     }
@@ -121,7 +124,8 @@ int main(int argc, char *argv[])
         std::copy(line.begin(), line.end(), std::back_inserter(v));
         vv.push_back(v);
     }
-    point start_point = findS(vv);
+    point endpoint;
+    point start_point = findS(vv, endpoint);
     element el(vv, start_point.i, start_point.j, 0);
     std::deque<element> el_vec;
     el_vec.push_back(el);
@@ -130,7 +134,7 @@ int main(int argc, char *argv[])
     {
         element el1 = el_vec.back();
         el_vec.pop_back();
-        if (el1.get_elementPoint().letter == '{')
+        if (el1.get_elementPoint().i == endpoint.i && el1.get_elementPoint().j==endpoint.j)
         {
             std::cout << "result is : " << el1.get_score() << std::endl;
             break;
